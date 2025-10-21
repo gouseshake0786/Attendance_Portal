@@ -74,6 +74,27 @@
             background-color: #28a745;
             cursor: not-allowed;
         }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: #333;
+            color: white;
+            font-size: 14px;
+            padding: 8px 0;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.5s ease;
+            z-index: 9999;
+        }
+
+        footer p {
+            margin: 0;
+        }
+        
     </style>
 </head>
 
@@ -103,6 +124,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Footer Section -->
+    <footer id="footer">
+        <p>&copy; <span id="year"></span> Mahammad Gouse. All rights reserved.</p>
+    </footer>
 
     <script>
 
@@ -186,6 +212,25 @@
             // Update every 30 seconds to keep status accurate
             setInterval(updateButtonStates, 30000);
         };
+
+        // Automatically set current year in footer
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        // Show footer only when user scrolls to bottom
+        const footer = document.getElementById("footer");
+
+        window.addEventListener("scroll", () => {
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const documentHeight = document.body.offsetHeight;
+
+            if (scrollPosition >= documentHeight - 5) {
+                footer.style.opacity = "1";
+                footer.style.transform = "translateY(0)";
+            } else {
+                footer.style.opacity = "0";
+                footer.style.transform = "translateY(100%)";
+            }
+        });
     </script>
 </body>
 
