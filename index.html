@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Online Attendance Portal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .grand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .parent {
+            display: grid;
+            grid-template-columns: repeat(3, 200px);
+            grid-template-rows: repeat(2, 200px);
+            gap: 10px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .child {
+            background-color: #4CAF50;
+            border: 2px solid #333;
+            border-radius: 8px;
+            font-size: large;
+            color: yellow;
+            position: relative;
+            text-align: center;
+            padding-top: 20px;
+        }
+
+        /* Default button (disabled) */
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #888;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: not-allowed;
+            position: absolute;
+            bottom: 20px;
+            right: 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Enabled button */
+        button.enabled {
+            background-color: #008CBA;
+            cursor: pointer;
+        }
+
+        button.enabled:hover {
+            background-color: #005f73;
+        }
+
+        /* Marked (after clicking) */
+        button.marked {
+            background-color: #28a745;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to the Online Attendance Portal</h1>
+    <p>Each class attendance button activates only during its time slot (for 10 minutes).</p>
+
+    <div class="grand">
+        <div class="parent">
+            <div class="child">Class 1
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 2
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 3
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 4
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 5
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 6
+                <button>Mark Attendance</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Disable right click
+        document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+        // Disable common keyboard shortcuts
+        document.addEventListener("keydown", (e) => {
+            if (
+                e.key === "F12" ||
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+                (e.ctrlKey && e.key === "U") ||
+                (e.ctrlKey && e.key === "S")
+            ) {
+                e.preventDefault();
+            }
+        });
+
+        // Define class activation schedule (start and end times)
+        // Each period is active for 10 minutes
+        const classSchedules = [
+            { startHour: 9, startMinute: 0 },   // Class 1 - 9:00 to 9:10
+            { startHour: 10, startMinute: 15 }, // Class 2 - 10:15 to 10:25
+            { startHour: 11, startMinute: 30 }, // Class 3 - 11:30 to 11:40
+            { startHour: 12, startMinute: 45 }, // Class 4 - 12:45 to 12:55
+            { startHour: 14, startMinute: 0 },  // Class 5 - 2:00 to 2:10
+            { startHour: 15, startMinute: 15 }  // Class 6 - 3:15 to 3:25
+        ];
+
+        const activeDuration = 10; // minutes
+
+        // Check and update buttons based on current time
+        function updateButtonStates() {
+            const buttons = document.getElementsByTagName("button");
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+
+            for (let i = 0; i < buttons.length; i++) {
+                const schedule = classSchedules[i];
+                const startTime = new Date(now);
+                startTime.setHours(schedule.startHour, schedule.startMinute, 0, 0);
+
+                const endTime = new Date(startTime);
+                endTime.setMinutes(startTime.getMinutes() + activeDuration);
+
+                if (now >= startTime && now <= endTime) {
+                    // Within time window → enable
+                    buttons[i].disabled = false;
+                    buttons[i].classList.add("enabled");
+                    buttons[i].classList.remove("marked");
+                } else {
+                    // Outside time window → disable
+                    buttons[i].disabled = true;
+                    buttons[i].classList.remove("enabled");
+                }
+            }
+        }
+
+        // Handle attendance marking click
+        function markAttendance(event) {
+            const btn = event.target;
+            btn.innerText = "Marked ✔";
+            btn.classList.remove("enabled");
+            btn.classList.add("marked");
+            btn.disabled = true;
+        }
+
+        // Attach click listeners to buttons
+        function setupButtons() {
+            const buttons = document.getElementsByTagName("button");
+            for (let btn of buttons) {
+                btn.addEventListener("click", markAttendance);
+            }
+        }
+
+        // Initialize when page loads
+        window.onload = function () {
+            setupButtons();
+            updateButtonStates(); // Initial check
+            // Update every 30 seconds to keep status accurate
+            setInterval(updateButtonStates, 30000);
+        };
+    </script>
+</body>
+
+</html>
