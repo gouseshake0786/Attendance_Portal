@@ -20,3 +20,6 @@ This feature simulates a real-world attendance system where students can mark th
 Frontend: HTML5, CSS3, JavaScript (ES6)
 
 Version Control: Git & GitHub
+
+<img width="935" height="497" alt="image" src="https://github.com/user-attachments/assets/88a8598e-1a5e-441d-b73e-3eefcfa2a8f1" />
+
