@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Online Attendance Portal</title>
     <meta charset="UTF-8">
@@ -122,21 +123,21 @@
             h1 {
                 font-size: 1.5rem;
             }
-            
+
             p {
                 font-size: 0.9rem;
                 padding: 0 5px;
             }
-            
+
             .parent {
                 grid-template-columns: 1fr;
                 padding: 15px;
             }
-            
+
             .child {
                 padding: 20px 10px 60px;
             }
-            
+
             button {
                 width: 90%;
                 padding: 12px;
@@ -169,7 +170,7 @@
             h1 {
                 font-size: 1.3rem;
             }
-            
+
             .child {
                 padding: 18px 8px 55px;
                 font-size: 0.95rem;
@@ -213,7 +214,7 @@
         // Disable right click & dev tools
         document.addEventListener("contextmenu", e => e.preventDefault());
         document.addEventListener("keydown", e => {
-            if (e.key === "F12" || 
+            if (e.key === "F12" ||
                 (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
                 (e.ctrlKey && e.key === "U") ||
                 (e.ctrlKey && e.key === "S")) {
@@ -221,50 +222,60 @@
             }
         });
 
-        // Class schedules (10-minute windows)
         const classSchedules = [
-            { startHour: 9, startMinute: 0 },   // 9:00-9:10
-            { startHour: 10, startMinute: 15 }, // 10:15-10:25
-            { startHour: 11, startMinute: 30 }, // 11:30-11:40
-            { startHour: 12, startMinute: 45 }, // 12:45-12:55
-            { startHour: 14, startMinute: 0 },  // 14:00-14:10
-            { startHour: 15, startMinute: 15 }  // 15:15-15:25
+            { startHour: 9, startMinute: 0 },
+            { startHour: 10, startMinute: 15 },
+            { startHour: 11, startMinute: 30 },
+            { startHour: 12, startMinute: 45 },
+            { startHour: 14, startMinute: 0 },
+            { startHour: 15, startMinute: 15 }
         ];
 
         const activeDuration = 10; // minutes
 
+        // Track which classes have been marked (persist even after time window)
+        const markedClasses = new Set();
+
         function updateButtonStates() {
             const buttons = document.querySelectorAll("button");
             const now = new Date();
-            
+
             buttons.forEach((btn, i) => {
+                // If already marked, keep it marked forever
+                if (markedClasses.has(i)) {
+                    btn.textContent = "Marked ✔";
+                    btn.classList.remove("enabled");
+                    btn.classList.add("marked");
+                    btn.disabled = true;
+                    return;
+                }
+
                 const schedule = classSchedules[i];
                 const startTime = new Date(now);
                 startTime.setHours(schedule.startHour, schedule.startMinute, 0, 0);
-                
                 const endTime = new Date(startTime);
                 endTime.setMinutes(startTime.getMinutes() + activeDuration);
-                
-                // Reset classes
+
+                // Reset to default disabled state
                 btn.classList.remove("enabled", "marked");
-                
+                btn.disabled = true;
+                btn.textContent = "Mark Attendance";
+
+                // Enable only if in time window and not marked
                 if (now >= startTime && now <= endTime) {
-                    // Active window
                     btn.disabled = false;
                     btn.classList.add("enabled");
-                    btn.textContent = "Mark Attendance";
-                } else {
-                    // Outside window
-                    btn.disabled = true;
-                    if (!btn.classList.contains("marked")) {
-                        btn.classList.remove("enabled");
-                    }
                 }
             });
         }
 
         function markAttendance(event) {
             const btn = event.target;
+            const index = Array.from(document.querySelectorAll(".child")).indexOf(btn.closest(".child"));
+
+            // Mark as attended permanently
+            markedClasses.add(index);
+
             btn.textContent = "Marked ✔";
             btn.classList.remove("enabled");
             btn.classList.add("marked");
@@ -277,16 +288,13 @@
             });
         }
 
-        // Initialize
         window.addEventListener("load", () => {
             document.getElementById("year").textContent = new Date().getFullYear();
             setupButtons();
             updateButtonStates();
-            setInterval(updateButtonStates, 10000); // Update every 30s
+            setInterval(updateButtonStates, 10000); // Check every 10 seconds
         });
-
-        // Footer visibility (always visible in this version for simplicity)
-        // Removed scroll-dependent footer since content is centered
     </script>
 </body>
+
 </html>
