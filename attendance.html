@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Online Attendance Portal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 70px; /* Make space for fixed footer */
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0 15px;
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .grand {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .parent {
+            display: grid;
+            gap: 15px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .child {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            border-radius: 10px;
+            color: white;
+            position: relative;
+            text-align: center;
+            padding: 25px 15px 70px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .child:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Button Styles */
+        button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #9e9e9e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: not-allowed;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button.enabled {
+            background: linear-gradient(to right, #2196F3, #0D47A1);
+            cursor: pointer;
+        }
+
+        button.enabled:hover {
+            background: linear-gradient(to right, #1976D2, #0A2C62);
+            transform: translateX(-50%) scale(1.03);
+        }
+
+        button.marked {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            cursor: not-allowed;
+        }
+
+        /* Next Activation Info Box */
+        #next-activation {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #2c3e50;
+            font-weight: 500;
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        /* Responsive Grid */
+        @media (min-width: 900px) {
+            .parent {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 600px) and (max-width: 899px) {
+            .parent {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 599px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+                padding: 0 5px;
+            }
+
+            .parent {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+
+            .child {
+                padding: 20px 10px 60px;
+            }
+
+            button {
+                width: 90%;
+                padding: 12px;
+                font-size: 0.95rem;
+            }
+
+            #next-activation {
+                font-size: 0.95rem;
+                padding: 10px;
+            }
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background: rgba(51, 51, 51, 0.95);
+            color: white;
+            font-size: 0.85rem;
+            padding: 8px 0;
+            letter-spacing: 0.4px;
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            .child {
+                padding: 18px 8px 55px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to the Online Attendance Portal</h1>
+    <p>Each class attendance button activates only during its time slot (for 10 minutes).</p>
+
+    <div class="grand">
+        <div class="parent">
+            <div class="child">Class 1
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 2
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 3
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 4
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 5
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 6
+                <button>Mark Attendance</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="next-activation"></div>
+
+    <footer id="footer">
+        <p>&copy; <span id="year"></span> Mahammad Gouse. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Disable right click & dev tools
+        document.addEventListener("contextmenu", e => e.preventDefault());
+        document.addEventListener("keydown", e => {
+            if (e.key === "F12" ||
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+                (e.ctrlKey && e.key === "U") ||
+                (e.ctrlKey && e.key === "S")) {
+                e.preventDefault();
+            }
+        });
+
+        const classSchedules = [
+            { startHour: 9, startMinute: 0 },
+            { startHour: 10, startMinute: 15 },
+            { startHour: 11, startMinute: 30 },
+            { startHour: 12, startMinute: 45 },
+            { startHour: 14, startMinute: 0 },
+            { startHour: 15, startMinute: 15 }
+        ];
+
+        const activeDuration = 10; // minutes
+        const markedClasses = new Set();
+
+        function getNextActivationMessage() {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+            for (let i = 0; i < classSchedules.length; i++) {
+                if (markedClasses.has(i)) continue;
+
+                const sched = classSchedules[i];
+                const classTime = new Date(today);
+                classTime.setHours(sched.startHour, sched.startMinute, 0, 0);
+                const endTime = new Date(classTime);
+                endTime.setMinutes(endTime.getMinutes() + activeDuration);
+
+                // Skip if already passed
+                if (now > endTime) continue;
+
+                // If currently active
+                if (now >= classTime && now <= endTime) {
+                    return "✅ A class is currently active for attendance!";
+                }
+
+                // If upcoming
+                if (classTime > now) {
+                    const diffMs = classTime - now;
+                    const diffMins = Math.ceil(diffMs / 60000);
+                    const hours = Math.floor(diffMins / 60);
+                    const mins = diffMins % 60;
+
+                    let timeStr = "";
+                    if (hours > 0) timeStr += `${hours} hour${hours !== 1 ? 's' : ''} `;
+                    timeStr += `${mins} minute${mins !== 1 ? 's' : ''}`;
+
+                    const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+                    const classTimeStr = classTime.toLocaleTimeString([], options);
+
+                    return `🕒 Next attendance window opens in <strong>${timeStr}</strong> (at ${classTimeStr}) for <strong>Class ${i + 1}</strong>.`;
+                }
+            }
+
+            return "📭 All attendance windows for today have ended or been marked.";
+        }
+
+        function updateButtonStates() {
+            const buttons = document.querySelectorAll("button");
+            const now = new Date();
+
+            buttons.forEach((btn, i) => {
+                if (markedClasses.has(i)) {
+                    btn.textContent = "Marked ✔";
+                    btn.classList.remove("enabled");
+                    btn.classList.add("marked");
+                    btn.disabled = true;
+                    return;
+                }
+
+                const schedule = classSchedules[i];
+                const startTime = new Date(now);
+                startTime.setHours(schedule.startHour, schedule.startMinute, 0, 0);
+                const endTime = new Date(startTime);
+                endTime.setMinutes(startTime.getMinutes() + activeDuration);
+
+                btn.classList.remove("enabled", "marked");
+                btn.disabled = true;
+                btn.textContent = "Mark Attendance";
+
+                if (now >= startTime && now <= endTime) {
+                    btn.disabled = false;
+                    btn.classList.add("enabled");
+                }
+            });
+
+            document.getElementById("next-activation").innerHTML = getNextActivationMessage();
+        }
+
+        function markAttendance(event) {
+            const btn = event.target;
+            const index = Array.from(document.querySelectorAll(".child")).indexOf(btn.closest(".child"));
+            markedClasses.add(index);
+
+            btn.textContent = "Marked ✔";
+            btn.classList.remove("enabled");
+            btn.classList.add("marked");
+            btn.disabled = true;
+
+            // Immediately update the message
+            document.getElementById("next-activation").innerHTML = getNextActivationMessage();
+        }
+
+        function setupButtons() {
+            document.querySelectorAll("button").forEach(btn => {
+                btn.addEventListener("click", markAttendance);
+            });
+        }
+
+        window.addEventListener("load", () => {
+            document.getElementById("year").textContent = new Date().getFullYear();
+            setupButtons();
+            updateButtonStates();
+            setInterval(updateButtonStates, 10000); // Update every 10 seconds
+        });
+
+        // Tawk.to Live Chat (fixed URL spacing issue)
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/68f88a1902cdf3194ea681ec/1j85dmtkg';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+</body>
+
+</html>
