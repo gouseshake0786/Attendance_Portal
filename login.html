@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Online Attendance Portal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0 15px;
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .grand {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .parent {
+            display: grid;
+            gap: 15px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .child {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            border-radius: 10px;
+            color: white;
+            position: relative;
+            text-align: center;
+            padding: 25px 15px 70px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .child:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Button Styles */
+        button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #9e9e9e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: not-allowed;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button.enabled {
+            background: linear-gradient(to right, #2196F3, #0D47A1);
+            cursor: pointer;
+        }
+
+        button.enabled:hover {
+            background: linear-gradient(to right, #1976D2, #0A2C62);
+            transform: translateX(-50%) scale(1.03);
+        }
+
+        button.marked {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            cursor: not-allowed;
+        }
+
+        /* Responsive Grid */
+        /* Desktop: 3 columns */
+        @media (min-width: 900px) {
+            .parent {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+            }
+        }
+
+        /* Tablet: 2 columns */
+        @media (min-width: 600px) and (max-width: 899px) {
+            .parent {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Mobile: 1 column */
+        @media (max-width: 599px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            p {
+                font-size: 0.9rem;
+                padding: 0 5px;
+            }
+            
+            .parent {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            .child {
+                padding: 20px 10px 60px;
+            }
+            
+            button {
+                width: 90%;
+                padding: 12px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background: rgba(51, 51, 51, 0.95);
+            color: white;
+            font-size: 0.85rem;
+            padding: 8px 0;
+            letter-spacing: 0.4px;
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            transition: all 0.4s ease;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Extra small devices */
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            .child {
+                padding: 18px 8px 55px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to the Online Attendance Portal</h1>
+    <p>Each class attendance button activates only during its time slot (for 10 minutes).</p>
+
+    <div class="grand">
+        <div class="parent">
+            <div class="child">Class 1
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 2
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 3
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 4
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 5
+                <button>Mark Attendance</button>
+            </div>
+            <div class="child">Class 6
+                <button>Mark Attendance</button>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <p>&copy; <span id="year"></span> Mahammad Gouse. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Disable right click & dev tools
+        document.addEventListener("contextmenu", e => e.preventDefault());
+        document.addEventListener("keydown", e => {
+            if (e.key === "F12" || 
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+                (e.ctrlKey && e.key === "U") ||
+                (e.ctrlKey && e.key === "S")) {
+                e.preventDefault();
+            }
+        });
+
+        // Class schedules (10-minute windows)
+        const classSchedules = [
+            { startHour: 9, startMinute: 0 },   // 9:00-9:10
+            { startHour: 10, startMinute: 15 }, // 10:15-10:25
+            { startHour: 11, startMinute: 30 }, // 11:30-11:40
+            { startHour: 12, startMinute: 45 }, // 12:45-12:55
+            { startHour: 14, startMinute: 0 },  // 14:00-14:10
+            { startHour: 15, startMinute: 15 }  // 15:15-15:25
+        ];
+
+        const activeDuration = 10; // minutes
+
+        function updateButtonStates() {
+            const buttons = document.querySelectorAll("button");
+            const now = new Date();
+            
+            buttons.forEach((btn, i) => {
+                const schedule = classSchedules[i];
+                const startTime = new Date(now);
+                startTime.setHours(schedule.startHour, schedule.startMinute, 0, 0);
+                
+                const endTime = new Date(startTime);
+                endTime.setMinutes(startTime.getMinutes() + activeDuration);
+                
+                // Reset classes
+                btn.classList.remove("enabled", "marked");
+                
+                if (now >= startTime && now <= endTime) {
+                    // Active window
+                    btn.disabled = false;
+                    btn.classList.add("enabled");
+                    btn.textContent = "Mark Attendance";
+                } else {
+                    // Outside window
+                    btn.disabled = true;
+                    if (!btn.classList.contains("marked")) {
+                        btn.classList.remove("enabled");
+                    }
+                }
+            });
+        }
+
+        function markAttendance(event) {
+            const btn = event.target;
+            btn.textContent = "Marked ✔";
+            btn.classList.remove("enabled");
+            btn.classList.add("marked");
+            btn.disabled = true;
+        }
+
+        function setupButtons() {
+            document.querySelectorAll("button").forEach(btn => {
+                btn.addEventListener("click", markAttendance);
+            });
+        }
+
+        // Initialize
+        window.addEventListener("load", () => {
+            document.getElementById("year").textContent = new Date().getFullYear();
+            setupButtons();
+            updateButtonStates();
+            setInterval(updateButtonStates, 10000); // Update every 30s
+        });
+
+        // Footer visibility (always visible in this version for simplicity)
+        // Removed scroll-dependent footer since content is centered
+    </script>
+</body>
+</html>
